@@ -40,21 +40,32 @@ public class DB4ODatabaseManager {
 			.getLogger(DB4ODatabaseManager.class);
 
 	@PostConstruct
-	public synchronized void init() throws UnsupportedEncodingException {
+	public synchronized void init() {
+		logger.info("Starting the DB4O server and client connection");
 		this.close();
 		ServerConfiguration configuration = Db4oClientServer
 				.newServerConfiguration();
 		configuration.file().blockSize(80);
-		String dbfolder = env.getProperty("dbpath_folder") + File.separator;
+		String dbFolderName = env.getProperty("dbpath_folder");
 
-		String dbpath = dbfolder + env.getProperty("dbname");
-		String classPath = URLDecoder.decode(this.getClass()
-				.getProtectionDomain().getCodeSource().getLocation().getPath(),
-				"UTF-8");
-		String dbFullPath = classPath
-				.substring(0, classPath.indexOf("classes"))
-				+ "classes"
-				+ File.separator + dbpath;
+		String dbFileName =  env.getProperty("dbname");
+		StringBuffer dbAbsolutePath = new StringBuffer(); 
+		try {
+			String classPath = URLDecoder.decode(this.getClass()
+					.getProtectionDomain().getCodeSource().getLocation().getPath(),
+					"UTF-8");
+			
+			dbAbsolutePath.append(classPath.substring(0, classPath.indexOf("classes")));
+			dbAbsolutePath.append("classes");
+			dbAbsolutePath.append(File.separator);
+			dbAbsolutePath.append(dbFolderName);
+			dbAbsolutePath.append(File.separator);
+			dbAbsolutePath.append(dbFileName);
+		} catch (UnsupportedEncodingException e) {
+			logger.error("Error while URL encoding to find class path",e);
+		} catch (RuntimeException e){
+			logger.error("Unknown exception occured",e);
+		}
 
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().messageLevel(1);
@@ -64,10 +75,13 @@ public class DB4ODatabaseManager {
 		config.common().objectClass(ZipCode.class).cascadeOnUpdate(true);
 
 		try {
-			server = Db4oClientServer.openServer(configuration, dbFullPath, 0);
+			server = Db4oClientServer.openServer(configuration, dbAbsolutePath.toString(), 0);
 			client = server.openClient();
+			logger.info("Started the DB4O server");
 		} catch (DatabaseFileLockedException e) {
-			e.printStackTrace();
+			logger.error("DB file locked : ",e);
+		} catch (RuntimeException e){
+			logger.error("Unknown exception occured",e);
 		}
 	}
 
@@ -98,4 +112,10 @@ public class DB4ODatabaseManager {
 	public void setEncrypt(boolean encrypt) {
 		this.encrypt = encrypt;
 	}
+	
+	public synchronized void updateObject(Object object) {
+		client.store(object);
+		client.commit();
+	}
+	
 }

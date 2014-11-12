@@ -2,7 +2,11 @@ package com.phunware.datacollector.domain;
 
 public class ZipCode {
 
-	String zipCode;
+	private String zipCode;
+	
+	public ZipCode(String zipCode){
+		this.zipCode = zipCode;
+	}
 
 	public String getZipCode() {
 		return zipCode;
