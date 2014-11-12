@@ -8,8 +8,14 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class YahooAPIEndPoint {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(YahooAPIEndPoint.class);
+	
 	private final static String queryWeatherForcast = "select item from weather.forecast where woeid in";
 	private final static String queryWoeid = "select woeid from geo.places(1)";
 
@@ -38,6 +44,7 @@ public class YahooAPIEndPoint {
 	}
 
 	private String callEndPoint(String endPoint){
+		logger.info("Calling yahoo end point");
 		BufferedReader in = null;
 		StringBuffer output = new StringBuffer();
 		try{
@@ -57,19 +64,19 @@ public class YahooAPIEndPoint {
 
 			return output.toString();
 		}catch(MalformedURLException e){
-			System.err.println("Malformed URL : "+e.getMessage());
+			logger.error("Malformed URL : ",e);
 		} catch (IOException e) {
-			System.err.println("IO issue while making http connection : "+e.getMessage());
+			logger.error("IO issue while making http connection : ",e);
 		} catch (RuntimeException e){
-			System.err.println("Unknown issue encountered : "+e.getMessage());
+			logger.error("Unknown issue encountered : ",e);
 		}finally{
 			if(in != null){
 				try {
 					in.close();
 				} catch (IOException e) {
-
+					logger.error("IO issue while closing io connection ",e);
 				} catch (RuntimeException e){
-
+					logger.error("Unknown issue encountered : ",e);
 				}
 			}
 		}
@@ -78,14 +85,9 @@ public class YahooAPIEndPoint {
 	}
 	
 	public String getWeatherForecastBasedOnZipCode(String zipCode){
+		logger.info("Creating yahoo end point url using zipcode : "+zipCode);
 		String endpoint = getYahooAPIEndPoint(zipCode);
 		return callEndPoint(endpoint);
 	}
 
-	public static void main(String args[]) {
-		YahooAPIEndPoint yahooAPIEndPoint = new YahooAPIEndPoint();
-
-		System.out.println(yahooAPIEndPoint.getWeatherForecastBasedOnZipCode("85281"));
-
-	}
 }
