@@ -10,7 +10,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class YahooAPIEndPoint {
 
 	private static final Logger logger = LoggerFactory
@@ -52,7 +54,7 @@ public class YahooAPIEndPoint {
 			HttpsURLConnection   connection = (HttpsURLConnection ) yahoo.openConnection();
 			connection.setRequestMethod("GET");
 			int responseCode = connection.getResponseCode();
-			System.out.println("response code : "+responseCode);
+			logger.info("response code : "+responseCode);
 			in = new BufferedReader(
 					new InputStreamReader(
 							connection.getInputStream()));

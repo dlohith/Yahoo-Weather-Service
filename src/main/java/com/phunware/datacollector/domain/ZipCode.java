@@ -16,4 +16,30 @@ public class ZipCode {
 		this.zipCode = zipCode;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+
+		if (o == this) {
+			return true;
+		}
+
+		if (!(o instanceof ZipCode)) {
+			return false;
+		}
+		 
+		ZipCode code = (ZipCode) o;
+		 
+		return this.zipCode.equals(code.getZipCode());
+	}
+	
+	@Override
+	public int hashCode(){
+		
+		int hashcode = 37;
+		hashcode = hashcode * 17 * this.zipCode.hashCode();
+		
+		return hashcode;
+		
+	}
+	
 }

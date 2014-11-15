@@ -21,6 +21,7 @@ import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
 import com.db4o.ext.DatabaseFileLockedException;
+import com.phunware.datacollector.domain.Weather;
 import com.phunware.datacollector.domain.ZipCode;
 
 @Component
@@ -73,6 +74,10 @@ public class DB4ODatabaseManager {
 				.indexed(true);
 		config.common().objectClass(ZipCode.class).cascadeOnActivate(true);
 		config.common().objectClass(ZipCode.class).cascadeOnUpdate(true);
+		config.common().objectClass(Weather.class).objectField("zipCode")
+		.indexed(true);
+		config.common().objectClass(Weather.class).cascadeOnActivate(true);
+		config.common().objectClass(Weather.class).cascadeOnUpdate(true);
 
 		try {
 			server = Db4oClientServer.openServer(configuration, dbAbsolutePath.toString(), 0);

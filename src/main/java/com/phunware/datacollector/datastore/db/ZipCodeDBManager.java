@@ -78,14 +78,14 @@ public class ZipCodeDBManager {
 			return;
 		}
 		File zipcodeListFile = new File(zipcodeFullPath);
-
+		List<ZipCode> existingZipCodes = getAllZipCodes();
 		if (zipcodeListFile.exists()) {
 			logger.info("Reading zipcode from the list");
-			readZipCodeLinebyLineAndStore(zipcodeListFile);
+			readZipCodeLinebyLineAndStore(zipcodeListFile,existingZipCodes);
 		}
 	}
 
-	private void readZipCodeLinebyLineAndStore(File zipcodeListFile) {
+	private void readZipCodeLinebyLineAndStore(File zipcodeListFile,List<ZipCode> existingZipCodes) {
 		BufferedReader  in = null;
 		List<ZipCode> zipCodes = new ArrayList<ZipCode>();
 		try {
@@ -95,7 +95,11 @@ public class ZipCodeDBManager {
 			while((line = in.readLine()) != null){
 				line = line.trim();
 				logger.info("Creating and storing zipcode object for : "+line);
-				zipCodes.add(zipCodeFactory.createZipCode(line));
+				ZipCode zipCode = zipCodeFactory.createZipCode(line);
+				if(!existingZipCodes.contains(zipCode)){
+					zipCodes.add(zipCode);
+				}
+				
 			}
 		} catch (IOException e) {
 			logger.error("IO issue while creating input stream to file", e);
