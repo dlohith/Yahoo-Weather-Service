@@ -18,7 +18,7 @@ public class YahooAPIEndPoint {
 	private static final Logger logger = LoggerFactory
 			.getLogger(YahooAPIEndPoint.class);
 	
-	private final static String queryWeatherForcast = "select item from weather.forecast where woeid in";
+	private final static String queryWeatherForcastForWOEID = "select item from weather.forecast where woeid in";
 	private final static String queryWoeid = "select woeid from geo.places(1)";
 
 	private final static String queryWhere = "where text =";
@@ -31,7 +31,7 @@ public class YahooAPIEndPoint {
 
 	private String getYahooAPIEndPoint(String zipCode){
 		StringBuffer endPoint = new StringBuffer(yahooWeatherAPIURL);
-		endPoint.append(queryWeatherForcast);
+		endPoint.append(queryWeatherForcastForWOEID);
 		endPoint.append(OPENPARA);
 		endPoint.append(queryWoeid);
 		endPoint.append(queryWhere);

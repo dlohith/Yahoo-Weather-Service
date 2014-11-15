@@ -89,6 +89,7 @@ public class Weather {
 		
 		int hashcode = 37;
 		hashcode = hashcode * 17 * this.zipCode.hashCode();
+		hashcode = hashcode * 29 * this.forecasts.hashCode();
 		
 		return hashcode;
 		
