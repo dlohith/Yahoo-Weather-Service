@@ -22,6 +22,10 @@ public class DataCollectorAPIs {
 	@RequestMapping(value = "getforecast/{zipcode}", method = RequestMethod.GET)  
 	public String getForecast(@PathVariable String zipcode) { 
 		
+		if(zipcode == null){
+			return dataCollectorService.getEmptyForecasts();
+		}
+		
 		String forecastJSON =  dataCollectorService.getWeatherForecat(zipcode);
 		
 		logger.info(forecastJSON);

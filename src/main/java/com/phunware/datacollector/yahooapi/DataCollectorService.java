@@ -74,10 +74,15 @@ public class DataCollectorService {
 		return forecastJSONString;
 	}
 
-	private String getEmptyForecasts() {
+	public String getEmptyForecasts() {
+		
+		JSONObject jsonObject = new JSONObject();
+		
+		JSONArray jsonArray = new JSONArray();
+		
+		jsonObject.put(IConstants.FORECASTS, jsonArray);
 
-		return ((JSONObject) new JSONObject().put(IConstants.FORECASTS,
-				new JSONArray())).toJSONString();
+		return jsonObject.toJSONString();
 
 	}
 
