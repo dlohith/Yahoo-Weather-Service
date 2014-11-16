@@ -2,12 +2,23 @@
 <%@ page session="false"%>
 <!DOCTYPE html>
 <html>
+<head>
+
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/wx-conditions.css" />
+</head>
 <body>
 
+<br>
+<br>
+<br>
+<br>
+<br>
+
 	<form action="getforecast">
-		<table>
+		<table >
 			<tr>
-				<td>Select a city</td>
+				<td><label>Select a city</label></td>
 				<td><select name="zipcode">
 						<option value="73301">Austin</option>
 						<option value="75014">Irving</option>
@@ -28,26 +39,42 @@
 
 	<c:choose>
 		<c:when test="${not empty forecastList}">
-			<div
-				style="float: left; width: 45%; border-radius: 5px; border: 2px solid #e3daa8; padding: 20px;">
-				<h4 align="center"></h4>
+			<div id="wx-forecast-container">
+				<div class="wx-24hour wx-module wx-grid3of6 wx-weather">
 
-				<c:forEach var="forecast" items="${forecastList}">
-					<c:out value="${forecast.text}"></c:out>,
-					<c:out value="${forecast.day}"></c:out>,
-					<c:out value="${forecast.date}"></c:out>,
-					<c:out value="${forecast.high}"></c:out>,				
-					<c:out value="${forecast.low}"></c:out>
-					<br>
-					<hr>
-				</c:forEach>
+					<c:forEach var="forecast" items="${forecastList}">
+						<div class="wx-daypart">
+							<h3>
+								<c:out value="${forecast.day}"></c:out>
+								, <span class="wx-label"><c:out value="${forecast.date}"></c:out></span>
+							</h3>
+							<div class="wx-conditions">
+								<img
+									src="http://s.imwx.com/v.20131006.215409/img/wxicon/100/<c:out value="${forecast.code}"></c:out>.png"
+									height="70" width="70" alt="<c:out value="${forecast.text}"></c:out>" class="wx-weather-icon">
+								<p class="wx-temp">
+									<c:out value="${forecast.high}"></c:out>
+									<sup>°F</sup><span class="wx-label"></span>
+								</p>
+								<p class="wx-temp-alt">
+									<c:out value="${forecast.low}"></c:out>
+									<sup>°F</sup><span class="wx-label"></span>
+								</p>
+								<p class="wx-phrase">
+									<c:out value="${forecast.text}"></c:out>
+								</p>
+							</div>
+						</div>
+						<br>
+						<hr>
+					</c:forEach>
+				</div>
 			</div>
 		</c:when>
 		<c:otherwise>
 		</c:otherwise>
 	</c:choose>
-
-
-
+	
+<a href="https://www.yahoo.com/?ilc=401" target="_blank"> <img src="https://poweredby.yahoo.com/white.png" width="134" height="29"/> </a>
 </body>
 </html>
