@@ -51,6 +51,7 @@ public class YahooAPIEndPoint {
 		StringBuffer output = new StringBuffer();
 		try{
 			URL yahoo = new URL(endPoint);
+			logger.info("Endpoint URL :"+ endPoint);
 			HttpsURLConnection   connection = (HttpsURLConnection ) yahoo.openConnection();
 			connection.setRequestMethod("GET");
 			int responseCode = connection.getResponseCode();
