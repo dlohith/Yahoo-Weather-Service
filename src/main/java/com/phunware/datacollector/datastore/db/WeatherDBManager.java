@@ -27,6 +27,10 @@ public class WeatherDBManager {
 			.getLogger(WeatherDBManager.class);
 
 	public synchronized void storeWeather(Weather weather) {
+		Weather oldWeather = getWeatherByZipCode(weather.getZipCode().getZipCode());
+		if(oldWeather != null){
+			dbManager.getClient().delete(oldWeather);
+		}
 		dbManager.getClient().store(weather);
 		dbManager.getClient().commit();
 	}
@@ -56,4 +60,6 @@ public class WeatherDBManager {
 		}
 		return result.get(0);
 	}
+	
+	
 }
