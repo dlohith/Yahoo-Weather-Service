@@ -24,6 +24,12 @@ import com.db4o.ext.DatabaseFileLockedException;
 import com.phunware.datacollector.domain.Weather;
 import com.phunware.datacollector.domain.ZipCode;
 
+/**
+ * Class handles DB4O initialization by starting the DB4O server using server configurations and provides client.
+ * 
+ * @author Dwaraka Lohith
+ *
+ */
 @Component
 @PropertySource(value = "classpath:/env.properties")
 public class DB4ODatabaseManager {
@@ -31,15 +37,22 @@ public class DB4ODatabaseManager {
 	@Autowired
 	private Environment env;
 
+	/*
+	 * DB4O client
+	 */
 	private ObjectContainer client;
-
+	
+	/*
+	 * DB4O server
+	 */
 	private ObjectServer server;
-
-	private boolean encrypt = true;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DB4ODatabaseManager.class);
 
+	/**
+	 * Starts the DB4O server and stores list of zip codes into the data store.
+	 */
 	@PostConstruct
 	public synchronized void init() {
 		logger.info("Starting the DB4O server and client connection");
@@ -90,10 +103,17 @@ public class DB4ODatabaseManager {
 		}
 	}
 
+	/**
+	 * Gets DB4O client
+	 * @return		Object of type {@link ObjectContainer}
+	 */
 	public ObjectContainer getClient() {
 		return client;
 	}
 
+	/**
+	 * Closes connection on DB4O client and  Server 
+	 */
 	private synchronized void close() {
 		if (client != null) {
 			client.close();
@@ -105,22 +125,13 @@ public class DB4ODatabaseManager {
 		server = null;
 	}
 
+	/**
+	 * Shutdown datastore
+	 */
 	@PreDestroy
 	public void shutdown() {
 		close();
 	}
 
-	public boolean isEncrypt() {
-		return encrypt;
-	}
-
-	public void setEncrypt(boolean encrypt) {
-		this.encrypt = encrypt;
-	}
-	
-	public synchronized void updateObject(Object object) {
-		client.store(object);
-		client.commit();
-	}
 	
 }
