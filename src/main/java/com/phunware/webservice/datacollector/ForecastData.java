@@ -74,7 +74,6 @@ public class ForecastData {
 	}
 
 	private static ForecastsObject convertJSONStringToForecast(String json) {
-		logger.info("input :"+json);
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			ForecastsObject forecastsObject = objectMapper.readValue(json,
