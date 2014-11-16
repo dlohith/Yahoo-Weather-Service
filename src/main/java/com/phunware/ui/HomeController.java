@@ -64,6 +64,7 @@ public class HomeController {
 			if(weatherForecastList != null && weatherForecastList.size() > 0){
 				List<Forecast> forecastList = weatherForecastList.get(0).getForecasts();
 				model.addAttribute("forecastList", forecastList);
+				model.addAttribute("city", zipcodeCityMapper.getCity(zipcode));
 			}
 		}
 		
